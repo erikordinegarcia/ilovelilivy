@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Produtos | Painel I Love Lilivy</title>
+  <link rel="icon" type="image/png" href="../assets/img/logo-ilovelilivy.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body class="admin-body">
+  <header class="admin-header">
+    <div class="admin-header__brand">
+      <img src="../assets/img/logo-ilovelilivy.png" alt="" width="44" height="44">
+      <h1>Painel de produtos</h1>
+    </div>
+    <div class="admin-header__actions">
+      <a href="../index.html#destaques" target="_blank" rel="noopener" class="btn-ghost">Ver site</a>
+      <button id="logoutBtn" class="btn-ghost">Sair</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <!-- FORMULÁRIO -->
+    <section class="card" id="formCard">
+      <h2 id="formTitle">Novo produto</h2>
+
+      <form id="productForm" novalidate>
+        <label for="category">Categoria</label>
+        <select id="category" required>
+          <option value="brincos">Brincos</option>
+          <option value="pulseiras">Pulseiras</option>
+          <option value="bolsas">Bolsas</option>
+          <option value="colares">Colares</option>
+        </select>
+
+        <label for="name">Nome do produto</label>
+        <input type="text" id="name" required maxlength="80" placeholder="Ex: Brinco Ponto de Luz Dourado">
+
+        <label for="description">Descrição <small>(aparece sobre a foto)</small></label>
+        <textarea id="description" rows="3" maxlength="240" placeholder="Ex: Banho de ouro 18k, zircônia cristal, antialérgico."></textarea>
+
+        <div class="row">
+          <div>
+            <label for="price">Preço (R$) <small>(vazio = "Sob consulta")</small></label>
+            <input type="text" id="price" inputmode="decimal" placeholder="Ex: 39,90">
+          </div>
+          <div>
+            <label for="sortOrder">Ordem <small>(menor aparece primeiro)</small></label>
+            <input type="number" id="sortOrder" value="0" step="1">
+          </div>
+        </div>
+
+        <label for="image">Foto do produto</label>
+        <div class="upload">
+          <img id="preview" class="upload__preview" alt="" hidden>
+          <input type="file" id="image" accept="image/jpeg,image/png,image/webp">
+        </div>
+        <p class="hint" id="imageHint">JPG, PNG ou WEBP, até 5 MB. De preferência quadrada.</p>
+
+        <label class="check">
+          <input type="checkbox" id="active" checked>
+          Mostrar no site
+        </label>
+        <label class="check check--star">
+          <input type="checkbox" id="featured">
+          ★ Destaque na página inicial
+        </label>
+        <p class="hint">A página inicial mostra até 8 destaques. Os demais produtos ficam na página "Produtos".</p>
+
+        <div class="form-actions">
+          <button type="submit" id="submitBtn" class="btn-primary">Adicionar produto</button>
+          <button type="button" id="cancelBtn" class="btn-ghost btn-ghost--dark" hidden>Cancelar edição</button>
+        </div>
+        <p class="form-msg form-msg--error" id="formError" role="alert"></p>
+        <p class="form-msg form-msg--ok" id="formOk" role="status"></p>
+      </form>
+    </section>
+
+    <!-- LISTA -->
+    <section class="card">
+      <div class="list-head">
+        <h2>Produtos cadastrados</h2>
+        <div class="filters" role="tablist" aria-label="Filtrar por categoria">
+          <button class="filter is-active" data-filter="todos">Todos</button>
+          <button class="filter filter--star" data-filter="destaques">★ Destaques</button>
+          <button class="filter" data-filter="brincos">Brincos</button>
+          <button class="filter" data-filter="pulseiras">Pulseiras</button>
+          <button class="filter" data-filter="bolsas">Bolsas</button>
+          <button class="filter" data-filter="colares">Colares</button>
+        </div>
+      </div>
+      <p class="featured-info" id="featuredInfo"></p>
+      <div id="productList" class="product-list">
+        <p class="muted">Carregando...</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="../assets/js/supabase-client.js"></script>
+  <script src="../assets/js/admin-auth.js"></script>
+  <script src="../assets/js/admin-dashboard.js"></script>
+</body>
+</html>

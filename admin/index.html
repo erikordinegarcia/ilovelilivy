@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Entrar | Painel I Love Lilivy</title>
+  <link rel="icon" type="image/png" href="../assets/img/logo-ilovelilivy.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body class="login-body">
+  <main class="login-box">
+    <img src="../assets/img/logo-ilovelilivy.png" alt="I Love Lilivy Semijoias" class="login-logo" width="120" height="120">
+    <h1>Painel de produtos</h1>
+    <p class="login-sub">Entre para cadastrar e editar os produtos do site.</p>
+
+    <p class="alert" id="configAlert" hidden>
+      O Supabase ainda não foi configurado. Preencha <code>assets/js/supabase-client.js</code>.
+    </p>
+
+    <form id="loginForm">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" required autocomplete="username">
+
+      <label for="password">Senha</label>
+      <input type="password" id="password" required autocomplete="current-password">
+
+      <button type="submit" id="loginBtn" class="btn-primary">Entrar</button>
+      <p class="form-msg form-msg--error" id="loginError" role="alert"></p>
+    </form>
+
+    <a href="../index.html" class="back-link">← Voltar ao site</a>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="../assets/js/supabase-client.js"></script>
+  <script src="../assets/js/admin-auth.js"></script>
+</body>
+</html>
