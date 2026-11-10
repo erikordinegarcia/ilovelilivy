@@ -50,7 +50,27 @@ async function carregarLista() {
   renderLista();
 }
 
-const LIMITE_DESTAQUES = 8; // igual ao LIMITE_DESTAQUES de assets/js/main.js
+// Igual ao CATEGORIAS_DESTAQUES / POR_CATEGORIA_DESTAQUES de assets/js/main.js
+const CATEGORIAS_DESTAQUES = { brincos: 'Brincos', colares: 'Colares', bolsas: 'Bolsas' };
+const POR_CATEGORIA_DESTAQUES = 3;
+
+function podeSerDestaque(categoria) {
+  return Object.prototype.hasOwnProperty.call(CATEGORIAS_DESTAQUES, categoria);
+}
+// Quantos destaques a categoria já tem (sem contar o produto "ignorarId")
+function destaquesNaCategoria(categoria, ignorarId) {
+  return produtos.filter((p) => p.category === categoria && p.featured && p.active && p.id !== ignorarId).length;
+}
+// Retorna a mensagem de erro, ou null se puder destacar
+function erroDestaque(categoria, ignorarId) {
+  if (!podeSerDestaque(categoria)) {
+    return `A página inicial só tem destaques de ${Object.values(CATEGORIAS_DESTAQUES).join(', ')}.`;
+  }
+  if (destaquesNaCategoria(categoria, ignorarId) >= POR_CATEGORIA_DESTAQUES) {
+    return `${CATEGORIAS_DESTAQUES[categoria]} já tem ${POR_CATEGORIA_DESTAQUES} destaques. Tire um deles (★) antes de escolher outro.`;
+  }
+  return null;
+}
 
 function renderLista() {
   const itens =
@@ -70,7 +90,8 @@ function renderLista() {
   listEl.innerHTML = itens.map(itemHTML).join('');
 
   itens.forEach((p) => {
-    document.getElementById(`star-${p.id}`).addEventListener('click', () => alternarDestaque(p));
+    const star = document.getElementById(`star-${p.id}`);
+    if (star) star.addEventListener('click', () => alternarDestaque(p));
     document.getElementById(`edit-${p.id}`).addEventListener('click', () => editar(p));
     document.getElementById(`del-${p.id}`).addEventListener('click', () => excluir(p));
   });
@@ -78,23 +99,23 @@ function renderLista() {
 
 function atualizarInfoDestaques() {
   const el = document.getElementById('featuredInfo');
-  const visiveis = produtos.filter((p) => p.featured && p.active).length;
   if (!produtos.length) {
     el.textContent = '';
     el.className = 'featured-info';
     return;
   }
-  if (visiveis === 0) {
-    el.textContent = 'Nenhum produto em destaque: a página inicial está mostrando os mais recentes. Clique na ☆ para escolher os destaques.';
-  } else if (visiveis > LIMITE_DESTAQUES) {
-    el.textContent = `★ ${visiveis} destaques marcados, mas a página inicial mostra só ${LIMITE_DESTAQUES} (os de menor "Ordem"). Desmarque alguns.`;
-  } else {
-    el.textContent = `★ ${visiveis} de ${LIMITE_DESTAQUES} destaques na página inicial.`;
-  }
-  el.className = 'featured-info' + (visiveis > LIMITE_DESTAQUES ? ' featured-info--warn' : '');
+  const partes = Object.keys(CATEGORIAS_DESTAQUES).map((cat) =>
+    `${CATEGORIAS_DESTAQUES[cat]} ${destaquesNaCategoria(cat)}/${POR_CATEGORIA_DESTAQUES}`);
+  el.textContent = `★ Na página inicial: ${partes.join(' · ')}. ` +
+    'Clique em "Pôr nos destaques" no produto que deve aparecer lá; os outros ficam só na página Produtos.';
+  el.className = 'featured-info';
 }
 
 async function alternarDestaque(p) {
+  if (!p.featured) {
+    const erro = erroDestaque(p.category, p.id);
+    if (erro) { alert(erro); return; }
+  }
   const btn = document.getElementById(`star-${p.id}`);
   btn.disabled = true;
   const { error } = await supabaseClient.from('products').update({ featured: !p.featured }).eq('id', p.id);
@@ -127,9 +148,8 @@ function itemHTML(p) {
         ${p.description ? `<p>${esc(p.description)}</p>` : ''}
       </div>
       <div class="item__actions">
-        <button id="star-${p.id}" class="btn-star${p.featured ? ' is-on' : ''}" aria-pressed="${p.featured}"
-          title="${p.featured ? 'Tirar dos destaques' : 'Destacar na página inicial'}"
-          aria-label="${p.featured ? 'Tirar dos destaques' : 'Destacar na página inicial'}">${p.featured ? '★' : '☆'}</button>
+        ${podeSerDestaque(p.category) ? `<button id="star-${p.id}" class="btn-star${p.featured ? ' is-on' : ''}" aria-pressed="${p.featured}"
+          title="${p.featured ? 'Tirar da página inicial' : 'Mostrar nos Destaques da página inicial'}">${p.featured ? '★ Nos destaques' : '☆ Pôr nos destaques'}</button>` : ''}
         <button id="edit-${p.id}" class="btn-small">Editar</button>
         <button id="del-${p.id}" class="btn-small btn-small--danger">Excluir</button>
       </div>
@@ -238,6 +258,10 @@ form.addEventListener('submit', async (e) => {
       active: form.active.checked,
       featured: form.featured.checked
     };
+    if (registro.featured) {
+      const erro = erroDestaque(registro.category, editandoId);
+      if (erro) throw new Error(erro);
+    }
 
     const arquivo = imageInput.files[0];
     if (arquivo && arquivo.size > MAX_BYTES) throw new Error('A foto passa de 5 MB. Escolha uma imagem menor.');

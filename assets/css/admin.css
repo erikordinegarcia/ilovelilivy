@@ -163,16 +163,17 @@ textarea { resize: vertical; }
 .featured-info--warn { background: #fff0e6; color: #a2421b; }
 
 .btn-star {
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
+  height: 38px; padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--gold-500, #d4a84a);
   background: #fff;
   color: var(--gold-700);
-  font-size: 1.15rem; line-height: 1;
+  font-family: inherit; font-size: .8rem; font-weight: 600; line-height: 1;
+  white-space: nowrap;
   cursor: pointer;
   transition: background .2s, transform .2s;
 }
-.btn-star:hover { background: #fbf5e4; transform: scale(1.08); }
+.btn-star:hover { background: #fbf5e4; }
 .btn-star.is-on { background: var(--gold-gradient, #f2d488); border-color: var(--gold-500); color: var(--green-900); }
 .btn-star:disabled { opacity: .5; cursor: wait; }
 .muted { color: var(--muted); }

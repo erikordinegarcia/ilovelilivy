@@ -7,8 +7,9 @@
   var WHATSAPP_NUMBER = '5511949037126';
   var DEFAULT_MSG = 'Olá! Vim pelo site da I Love Lilivy e gostaria de mais informações.';
 
-  // Quantos produtos aparecem nos Destaques da página inicial
-  var LIMITE_DESTAQUES = 8;
+  // Destaques da página inicial: categorias (nesta ordem) e quantos produtos de cada
+  var CATEGORIAS_DESTAQUES = ['brincos', 'colares', 'bolsas'];
+  var POR_CATEGORIA_DESTAQUES = 3;
   // Quantos produtos o catálogo mostra por vez ("Ver mais" carrega o próximo lote)
   var POR_PAGINA = 12;
 
@@ -176,44 +177,60 @@
   }
 
   // ---------------- Página inicial: Destaques ----------------
+  // Um bloco por categoria (Brincos, Colares, Bolsas) com até 3 produtos cada.
+  // Só aparecem os produtos marcados com ★ Destaque no /admin; os demais ficam
+  // apenas na página de Produtos. Categoria sem destaque não aparece.
   var destaquesGrid = document.getElementById('destaquesGrid');
   if (destaquesGrid) {
     var mostrarDestaques = function (lista) {
-      if (!lista.length) {
-        destaquesGrid.classList.add('prod-grid--empty');
+      var grupos = CATEGORIAS_DESTAQUES.map(function (cat) {
+        var itens = lista.filter(function (p) { return p.cat === cat && p.destaque; })
+          .sort(function (a, b) {
+            return (a.ordem - b.ordem) ||
+              (b.criado > a.criado ? 1 : b.criado < a.criado ? -1 : 0);
+          })
+          .slice(0, POR_CATEGORIA_DESTAQUES);
+        return { cat: cat, itens: itens };
+      }).filter(function (g) { return g.itens.length; });
+
+      if (!grupos.length) {
         destaquesGrid.innerHTML = '<p class="prod-empty">Novidades em breve. <a target="_blank" rel="noopener" href="' +
           waLink(DEFAULT_MSG) + '">Fale com a gente no WhatsApp</a>.</p>';
         return;
       }
-      destaquesGrid.innerHTML = lista.map(function (p) { return cardHTML(p); }).join('');
+      destaquesGrid.innerHTML = grupos.map(function (g) {
+        return '<div class="destaques__group">' +
+          '<div class="destaques__head">' +
+            '<h3 class="destaques__title">' + esc(TITULOS[g.cat]) + '</h3>' +
+            '<span class="destaques__line" aria-hidden="true"></span>' +
+            '<a class="destaques__all" href="produtos.html?cat=' + g.cat + '">Ver todos' +
+              '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a>' +
+          '</div>' +
+          '<div class="prod-grid">' + g.itens.map(function (p) { return cardHTML(p); }).join('') + '</div>' +
+        '</div>';
+      }).join('');
     };
 
     if (!temSupabase) {
-      mostrarDestaques(exemplos().filter(function (p) { return p.destaque; }).slice(0, LIMITE_DESTAQUES));
+      mostrarDestaques(exemplos());
     } else {
-      destaquesGrid.innerHTML = skeleton(4);
+      destaquesGrid.innerHTML = '<div class="prod-grid">' + skeleton(3) + '</div>';
       supabaseClient.from('products').select(CAMPOS)
         .eq('active', true).eq('featured', true)
+        .in('category', CATEGORIAS_DESTAQUES)
         .order('sort_order', { ascending: true })
         .order('created_at', { ascending: false })
-        .limit(LIMITE_DESTAQUES)
         .then(function (res) {
           if (res.error) throw res.error;
-          if (res.data.length) return res.data;
-          // Nenhum destaque marcado ainda: mostra as novidades mais recentes
-          return supabaseClient.from('products').select(CAMPOS)
-            .eq('active', true)
-            .order('created_at', { ascending: false })
-            .limit(LIMITE_DESTAQUES)
-            .then(function (r2) { if (r2.error) throw r2.error; return r2.data; });
+          mostrarDestaques(res.data.map(doBanco));
         })
-        .then(function (rows) { mostrarDestaques(rows.map(doBanco)); })
         .catch(function (err) {
           console.error('Erro ao carregar destaques:', err);
           mostrarDestaques([]);
         });
     }
   }
+
 
   // ---------------- produtos.html: catálogo completo ----------------
   var catalogoGrid = document.getElementById('catalogoGrid');

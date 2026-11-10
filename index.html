@@ -10,7 +10,7 @@
 
   <meta property="og:title" content="I Love Lilivy Semijoias">
   <meta property="og:description" content="Somos especialistas em semijoias e acessórios premium. Beleza, elegância e sofisticação em cada detalhe.">
-  <meta property="og:image" content="assets/img/hero-modelo.jpg">
+  <meta property="og:image" content="assets/img/hero-modelo.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +23,7 @@
   <header class="header" id="header">
     <div class="container header__inner">
       <a href="#inicio" class="header__logo" aria-label="I Love Lilivy - Início">
-        <img src="assets/img/logo-ilovelilivy.png" alt="I Love Lilivy Semijoias" width="56" height="56">
+        <img src="assets/img/logo-ilovelilivy.png" alt="I Love Lilivy Semijoias" width="72" height="72">
       </a>
 
       <nav class="nav" id="nav" aria-label="Menu principal">
@@ -54,66 +54,70 @@
       </div>
 
       <div class="hero__media" aria-hidden="true">
-        <img src="assets/img/hero-modelo.jpg" alt="">
+        <img src="assets/img/hero-modelo.png" alt="">
       </div>
+      <div class="hero__overlay" aria-hidden="true"></div>
 
       <div class="container hero__inner">
         <div class="hero__content">
-          <img class="hero__logo" src="assets/img/logo-ilovelilivy.png" alt="I Love Lilivy Semijoias" width="240" height="240">
+          <span class="hero__eyebrow">Somos especialistas em</span>
 
           <h1 class="hero__title">
-            <span class="hero__pre">Somos especialistas em</span>
-            <span class="hero__main gold-text">Semijoias,</span>
-            <span class="hero__sub">acessórios premium</span>
+            <span class="hero__line">Semijoias e</span>
+            <span class="hero__line gold-text">acessórios</span>
+            <span class="hero__line gold-text">premium</span>
           </h1>
 
-          <p class="hero__tagline">
-            <span>Beleza, elegância e sofisticação</span>
-            <span>em cada detalhe.</span>
+          <p class="hero__lead">
+            Beleza, elegância e sofisticação em cada detalhe. Brincos, colares,
+            pulseiras e bolsas selecionados para valorizar o seu estilo.
           </p>
 
-          <p class="hero__products">Brincos <i>•</i> Pulseiras <i>•</i> Bolsas <i>•</i> Colares</p>
-
-          <ul class="hero__features">
-            <li>
-              <span class="icon-ring">
-                <svg viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M12 21 8 9l4-6 4 6-4 12"/></svg>
-              </span>
-              Qualidade<br>garantida
-            </li>
-            <li>
-              <span class="icon-ring">
-                <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
-              </span>
-              Compra<br>segura
-            </li>
-            <li>
-              <span class="icon-ring">
-                <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h5"/><circle cx="17" cy="15" r="2"/></svg>
-              </span>
-              Pagamento<br>facilitado
-            </li>
-            <li>
-              <span class="icon-ring">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="4"/><path d="M5 9a7 7 0 0 1 14 0M4 9v3h2V9zM18 9v3h2V9zM6 20c1.5-3 3.5-4 6-4s4.5 1 6 4"/></svg>
-              </span>
-              Atendimento<br>Personalizado
-            </li>
-          </ul>
-
-          <div class="hero__actions">
-            <a href="#orcamento" class="btn btn--outline-gold btn--lg">
-              <svg viewBox="0 0 24 24" class="btn__icon"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M8.5 13l2.5 2.5L16 10"/></svg>
-              Solicitar orçamento
-              <svg viewBox="0 0 24 24" class="btn__arrow"><path d="m9 5 7 7-7 7"/></svg>
-            </a>
-            <div class="badge-parcel">
-              <svg viewBox="0 0 24 24" class="btn__icon"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h5"/></svg>
-              <span class="badge-parcel__txt">Parcelamento<br>em até</span>
-              <strong class="gold-text">3x</strong>
-            </div>
-          </div>
+          <a href="#orcamento" class="hero__cta">
+            <svg class="hero__cta-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h5"/></svg>
+            <span class="hero__cta-text">
+              Solicite seu orçamento
+              <strong class="gold-text">Parcelamento em até 3x</strong>
+            </span>
+            <svg class="hero__cta-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
         </div>
+      </div>
+    </section>
+
+    <!-- ===================== FAIXA DE BENEFÍCIOS ===================== -->
+    <section class="hero-band" aria-label="Benefícios">
+      <div class="container">
+        <ul class="hero-band__list">
+          <li>
+            <svg class="hero-band__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M12 21 8 9l4-6 4 6-4 12"/></svg>
+            <div>
+              <h3>Qualidade garantida</h3>
+              <p>Acabamento e durabilidade que você sente no detalhe</p>
+            </div>
+          </li>
+          <li>
+            <svg class="hero-band__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
+            <div>
+              <h3>Compra segura</h3>
+              <p>Transparência do primeiro contato até a entrega</p>
+            </div>
+          </li>
+          <li>
+            <svg class="hero-band__icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h5"/><circle cx="17" cy="15" r="2"/></svg>
+            <div>
+              <h3>Pagamento facilitado</h3>
+              <p>Parcele suas compras em até 3x</p>
+            </div>
+          </li>
+          <li>
+            <svg class="hero-band__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="4"/><path d="M5 9a7 7 0 0 1 14 0M4 9v3h2V9zM18 9v3h2V9zM6 20c1.5-3 3.5-4 6-4s4.5 1 6 4"/></svg>
+            <div>
+              <h3>Atendimento personalizado</h3>
+              <p>Ajudamos você a escolher a peça ideal</p>
+            </div>
+          </li>
+        </ul>
       </div>
     </section>
 
@@ -125,10 +129,10 @@
         <header class="section__head">
           <span class="section__kicker">Os mais amados</span>
           <h2 class="section__title">Destaques</h2>
-          <p class="section__desc">Uma seleção especial das nossas peças favoritas.</p>
+          <p class="section__desc">Uma seleção especial das nossas peças favoritas de cada categoria.</p>
         </header>
 
-        <div id="destaquesGrid" class="prod-grid prod-grid--4 prod-grid--center" aria-live="polite"></div>
+        <div id="destaquesGrid" class="destaques" aria-live="polite"></div>
 
         <div class="products__more">
           <a href="produtos.html" class="btn btn--outline-gold btn--lg">

@@ -6,7 +6,7 @@ Site da **I Love Lilivy Semijoias**: semijoias e acessórios premium (brincos, p
 
 | Página | O que tem |
 | --- | --- |
-| `index.html` | Página inicial: apresentação, **Destaques** (até 8 produtos marcados com ★), diferenciais, sobre nós e orçamento via WhatsApp |
+| `index.html` | Página inicial: apresentação, **Destaques** (até 3 produtos de Brincos, Colares e Bolsas, escolhidos no painel com ★), diferenciais, sobre nós e orçamento via WhatsApp |
 | `produtos.html` | Catálogo completo: filtro por categoria, busca, ordenação e "Ver mais" |
 | `admin/` | Painel das donas (login) para cadastrar, editar, destacar e excluir produtos |
 
