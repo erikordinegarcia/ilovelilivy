@@ -6,7 +6,7 @@
 -- 1) TABELA DE PRODUTOS ------------------------------------------------
 create table if not exists public.products (
   id          uuid primary key default gen_random_uuid(),
-  category    text not null check (category in ('brincos', 'pulseiras', 'bolsas', 'colares')),
+  category    text not null check (category in ('brincos', 'pulseiras', 'braceletes', 'bolsas', 'colares')),
   name        text not null,
   description text,
   price       numeric(10, 2) check (price is null or price >= 0),  -- null = "Sob consulta"
@@ -19,6 +19,15 @@ create table if not exists public.products (
 
 -- Para bancos criados antes da coluna "featured" existir
 alter table public.products add column if not exists featured boolean not null default false;
+
+-- Valor à vista e parcela exibidos no site (null = calculado a partir do preço)
+alter table public.products add column if not exists cash_price  numeric(10, 2) check (cash_price is null or cash_price >= 0);
+-- Categoria "braceletes" (para bancos criados antes dela existir)
+alter table public.products drop constraint if exists products_category_check;
+alter table public.products add constraint products_category_check
+  check (category in ('brincos', 'pulseiras', 'braceletes', 'bolsas', 'colares'));
+
+alter table public.products add column if not exists installment numeric(10, 2) check (installment is null or installment >= 0);
 
 create index if not exists products_category_order_idx
   on public.products (category, sort_order, created_at);

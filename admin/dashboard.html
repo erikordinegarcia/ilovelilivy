@@ -33,6 +33,7 @@
         <select id="category" required>
           <option value="brincos">Brincos</option>
           <option value="pulseiras">Pulseiras</option>
+          <option value="braceletes">Braceletes</option>
           <option value="bolsas">Bolsas</option>
           <option value="colares">Colares</option>
         </select>
@@ -54,6 +55,18 @@
           </div>
         </div>
 
+        <div class="row">
+          <div>
+            <label for="cashPrice">Valor à vista (R$) <small>(vazio = 10% de desconto)</small></label>
+            <input type="text" id="cashPrice" inputmode="decimal" placeholder="Ex: 119,90">
+          </div>
+          <div>
+            <label for="installment">Parcela 3x (R$) <small>(vazio = à vista ÷ 3)</small></label>
+            <input type="text" id="installment" inputmode="decimal" placeholder="Ex: 39,90">
+          </div>
+        </div>
+        <p class="hint">O site mostra exatamente os valores à vista e da parcela digitados aqui. O "Preço" aparece em cima como preço cheio.</p>
+
         <label for="image">Foto do produto</label>
         <div class="upload">
           <img id="preview" class="upload__preview" alt="" hidden>
@@ -69,7 +82,7 @@
           <input type="checkbox" id="featured">
           ★ Destaque na página inicial
         </label>
-        <p class="hint">Os Destaques da página inicial mostram até 3 produtos de Brincos, Colares e Bolsas (nessa ordem). Só aparecem os marcados aqui; os demais ficam apenas na página "Produtos".</p>
+        <p class="hint">Os Destaques da página inicial mostram até 4 produtos de Brincos, Pulseiras, Braceletes, Colares e Bolsas (nessa ordem). Só aparecem os marcados aqui; os demais ficam apenas na página "Produtos".</p>
 
         <div class="form-actions">
           <button type="submit" id="submitBtn" class="btn-primary">Adicionar produto</button>
@@ -89,6 +102,7 @@
           <button class="filter filter--star" data-filter="destaques">★ Destaques</button>
           <button class="filter" data-filter="brincos">Brincos</button>
           <button class="filter" data-filter="pulseiras">Pulseiras</button>
+          <button class="filter" data-filter="braceletes">Braceletes</button>
           <button class="filter" data-filter="bolsas">Bolsas</button>
           <button class="filter" data-filter="colares">Colares</button>
         </div>

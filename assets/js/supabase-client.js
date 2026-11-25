@@ -19,6 +19,7 @@ const PRODUCT_BUCKET = 'product-images';
 const CATEGORIAS = {
   brincos: 'Brincos',
   pulseiras: 'Pulseiras',
+  braceletes: 'Braceletes',
   bolsas: 'Bolsas',
   colares: 'Colares'
 };

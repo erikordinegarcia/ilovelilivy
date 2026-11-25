@@ -8,8 +8,8 @@
   var DEFAULT_MSG = 'Olá! Vim pelo site da I Love Lilivy e gostaria de mais informações.';
 
   // Destaques da página inicial: categorias (nesta ordem) e quantos produtos de cada
-  var CATEGORIAS_DESTAQUES = ['brincos', 'colares', 'bolsas'];
-  var POR_CATEGORIA_DESTAQUES = 3;
+  var CATEGORIAS_DESTAQUES = ['brincos', 'pulseiras', 'braceletes', 'colares', 'bolsas'];
+  var POR_CATEGORIA_DESTAQUES = 4;
   // Quantos produtos o catálogo mostra por vez ("Ver mais" carrega o próximo lote)
   var POR_PAGINA = 12;
 
@@ -86,10 +86,11 @@
   // =====================================================
   // PRODUTOS
   // =====================================================
-  var TITULOS = { brincos: 'Brincos', pulseiras: 'Pulseiras', bolsas: 'Bolsas', colares: 'Colares' };
+  var TITULOS = { brincos: 'Brincos', pulseiras: 'Pulseiras', braceletes: 'Braceletes', bolsas: 'Bolsas', colares: 'Colares' };
   var CAT_ICONS = {
     brincos: '<circle cx="24" cy="10" r="4"/><path d="M24 14v6"/><path d="M24 20 16 32a8 8 0 1 0 16 0z"/><circle cx="24" cy="33" r="2.5"/>',
     pulseiras: '<ellipse cx="24" cy="24" rx="17" ry="11"/><ellipse cx="24" cy="24" rx="12" ry="6.5"/><circle cx="10" cy="22" r="1.6"/><circle cx="17" cy="14.5" r="1.6"/><circle cx="31" cy="14.5" r="1.6"/><circle cx="38" cy="22" r="1.6"/>',
+    braceletes: '<path d="M10 18c0-5 6-8 14-8s14 3 14 8v12c0 5-6 8-14 8s-14-3-14-8z"/><path d="M10 18c0 5 6 8 14 8s14-3 14-8"/>',
     bolsas: '<path d="M8 18h32l-3 24H11z"/><path d="M17 18v-4a7 7 0 0 1 14 0v4"/><rect x="21" y="25" width="6" height="4" rx="1"/>',
     colares: '<path d="M8 8c2 16 8 22 16 24 8-2 14-8 16-24"/><path d="M24 32v3"/><path d="m24 35-4 5 4 4 4-4z"/>'
   };
@@ -97,7 +98,7 @@
   var temSupabase = typeof supabaseClient !== 'undefined' && !!supabaseClient;
 
   function brl(v) {
-    return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
@@ -115,6 +116,8 @@
       nome: p.name,
       descricao: p.description || '',
       preco: p.price === null ? null : Number(p.price),
+      aVista: p.cash_price == null ? null : Number(p.cash_price),
+      parcela: p.installment == null ? null : Number(p.installment),
       foto: p.image_url,
       destaque: !!p.featured,
       ordem: p.sort_order || 0,
@@ -135,7 +138,7 @@
     return lista;
   }
 
-  var CAMPOS = 'id, category, name, description, price, image_url, sort_order, featured, created_at';
+  var CAMPOS = 'id, category, name, description, price, cash_price, installment, image_url, sort_order, featured, created_at';
 
   function cardHTML(p, opts) {
     opts = opts || {};
@@ -146,9 +149,14 @@
 
     var precos;
     if (typeof p.preco === 'number') {
-      var parcela = p.preco / cfg.parcelasMax;
+      // Valor à vista e parcela: usa os valores digitados no painel; se estiverem
+      // vazios, calcula (preço cheio menos o desconto; parcela = à vista / nº de parcelas).
+      var aVista = typeof p.aVista === 'number' ? p.aVista
+        : Math.round(p.preco * (1 - (cfg.descontoAVista || 0)) * 100) / 100;
+      var parcela = typeof p.parcela === 'number' ? p.parcela
+        : Math.floor(Math.round(aVista * 100) / cfg.parcelasMax) / 100;
       precos = '<p class="prod__price">' + brl(p.preco) + '</p>' +
-        (cfg.descontoAVista ? '<p class="prod__cash"><strong>' + brl(p.preco * (1 - cfg.descontoAVista)) + '</strong> à vista com desconto</p>' : '') +
+        (aVista < p.preco ? '<p class="prod__cash"><strong>' + brl(aVista) + '</strong> à vista com desconto</p>' : '') +
         '<p class="prod__install">ou ' + cfg.parcelasMax + 'x de ' + brl(parcela) + ' sem juros</p>';
     } else {
       precos = '<p class="prod__price prod__price--ask">Sob consulta</p>' +
@@ -164,8 +172,8 @@
         '<span class="prod__cat">' + esc(titulo) + '</span>' +
         '<h3 class="prod__name">' + esc(p.nome) + '</h3>' + precos +
         '<a class="btn btn--green prod__btn" target="_blank" rel="noopener" href="' +
-          waLink('Olá! Tenho interesse no produto: ' + p.nome + ' (' + titulo + ').') +
-        '">Quero este</a>' +
+          waLink('Olá! Quero comprar o produto: ' + p.nome + ' (' + titulo + ').') +
+        '"><svg class="prod__cart" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.2a1.5 1.5 0 0 0 1.5 1.3h8.8a1.5 1.5 0 0 0 1.5-1.2L21 8H6.2"/></svg>Comprar</a>' +
       '</div>' +
     '</article>';
   }
@@ -177,7 +185,7 @@
   }
 
   // ---------------- Página inicial: Destaques ----------------
-  // Um bloco por categoria (Brincos, Colares, Bolsas) com até 3 produtos cada.
+  // Um bloco por categoria (Brincos, Pulseiras, Braceletes, Colares, Bolsas) com até 4 produtos cada.
   // Só aparecem os produtos marcados com ★ Destaque no /admin; os demais ficam
   // apenas na página de Produtos. Categoria sem destaque não aparece.
   var destaquesGrid = document.getElementById('destaquesGrid');
@@ -214,7 +222,7 @@
     if (!temSupabase) {
       mostrarDestaques(exemplos());
     } else {
-      destaquesGrid.innerHTML = '<div class="prod-grid">' + skeleton(3) + '</div>';
+      destaquesGrid.innerHTML = '<div class="prod-grid">' + skeleton(4) + '</div>';
       supabaseClient.from('products').select(CAMPOS)
         .eq('active', true).eq('featured', true)
         .in('category', CATEGORIAS_DESTAQUES)

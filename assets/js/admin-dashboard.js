@@ -51,8 +51,8 @@ async function carregarLista() {
 }
 
 // Igual ao CATEGORIAS_DESTAQUES / POR_CATEGORIA_DESTAQUES de assets/js/main.js
-const CATEGORIAS_DESTAQUES = { brincos: 'Brincos', colares: 'Colares', bolsas: 'Bolsas' };
-const POR_CATEGORIA_DESTAQUES = 3;
+const CATEGORIAS_DESTAQUES = { brincos: 'Brincos', pulseiras: 'Pulseiras', braceletes: 'Braceletes', colares: 'Colares', bolsas: 'Bolsas' };
+const POR_CATEGORIA_DESTAQUES = 4;
 
 function podeSerDestaque(categoria) {
   return Object.prototype.hasOwnProperty.call(CATEGORIAS_DESTAQUES, categoria);
@@ -134,7 +134,9 @@ function itemHTML(p) {
   const thumb = p.image_url
     ? `<img src="${esc(p.image_url)}" alt="" class="item__thumb" loading="lazy">`
     : `<div class="item__thumb item__thumb--empty">sem foto</div>`;
-  const preco = p.price === null ? 'Sob consulta' : formatarBRL(Number(p.price));
+  let preco = p.price === null ? 'Sob consulta' : formatarBRL(Number(p.price));
+  if (p.cash_price != null) preco += ` · à vista ${formatarBRL(Number(p.cash_price))}`;
+  if (p.installment != null) preco += ` · 3x ${formatarBRL(Number(p.installment))}`;
 
   return `
     <article class="item${p.active ? '' : ' item--off'}">
@@ -194,6 +196,8 @@ function editar(p) {
   form.name.value = p.name;
   form.description.value = p.description || '';
   form.price.value = p.price === null ? '' : String(p.price).replace('.', ',');
+  form.cashPrice.value = p.cash_price == null ? '' : Number(p.cash_price).toFixed(2).replace('.', ',');
+  form.installment.value = p.installment == null ? '' : Number(p.installment).toFixed(2).replace('.', ',');
   form.sortOrder.value = p.sort_order ?? 0;
   form.active.checked = p.active;
   form.featured.checked = !!p.featured;
@@ -254,6 +258,8 @@ form.addEventListener('submit', async (e) => {
       name,
       description: form.description.value.trim() || null,
       price: lerPreco(form.price.value),
+      cash_price: lerPreco(form.cashPrice.value),
+      installment: lerPreco(form.installment.value),
       sort_order: parseInt(form.sortOrder.value, 10) || 0,
       active: form.active.checked,
       featured: form.featured.checked
@@ -347,5 +353,5 @@ function esc(t) {
 }
 
 function formatarBRL(v) {
-  return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
